@@ -1,6 +1,5 @@
+import { Flex, Icon } from "@chakra-ui/react";
 import React from "react";
-import { AddIcon } from "@chakra-ui/icons";
-import { Box, Flex, Icon } from "@chakra-ui/react";
 import { BsArrowUpRightCircle, BsChatDots } from "react-icons/bs";
 import { GrAdd } from "react-icons/gr";
 import {

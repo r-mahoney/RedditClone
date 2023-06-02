@@ -74,8 +74,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ user }) => {
                                 mr={1}
                             />
                         )}
-                        <ChevronDownIcon />
                     </Flex>
+                    <ChevronDownIcon />
                 </Flex>
             </MenuButton>
             {user ? (

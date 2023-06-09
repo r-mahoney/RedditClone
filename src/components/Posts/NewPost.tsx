@@ -18,7 +18,13 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "@/src/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
+import {
+    Alert,
+    AlertIcon,
+    AlertTitle,
+    AlertDescription,
+} from "@chakra-ui/react";
+import { MdError } from "react-icons/md";
 
 type NewPostProps = {
     user: User;
@@ -102,6 +108,7 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
     const onTextChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
+        setError("")
         const {
             target: { name, value },
         } = event;
@@ -156,6 +163,12 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
                         />
                     )}
                 </Flex>
+                {error && (
+                    <Alert status="error">
+                        <AlertIcon />
+                        <AlertTitle>{error}</AlertTitle>
+                    </Alert>
+                )}
             </Flex>
         </>
     );

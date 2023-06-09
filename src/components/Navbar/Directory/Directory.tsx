@@ -5,6 +5,7 @@ import { TiHome } from "react-icons/ti";
 import Communities from "./Communities";
 
 const UserMenu: React.FC = () => {
+    
     return (
         <Menu>
             <MenuButton

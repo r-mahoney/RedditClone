@@ -21,6 +21,7 @@ const useCommunityData = () => {
         //is user signed in? if not open auth modal
         if(!user) {
             setAuthModalState({open: true, view: 'login'})
+            return;
         }
 
         if (isJoined) {

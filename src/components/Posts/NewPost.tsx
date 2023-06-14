@@ -25,6 +25,7 @@ import {
     AlertDescription,
 } from "@chakra-ui/react";
 import { MdError } from "react-icons/md";
+import useSelectFile from "@/src/hooks/useSelectFile";
 
 type NewPostProps = {
     user: User;
@@ -59,6 +60,7 @@ export type tabItem = {
 };
 
 const NewPost: React.FC<NewPostProps> = ({ user }) => {
+    const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
     const [error, setError] = useState("");
@@ -67,7 +69,6 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
         body: "",
     });
     const [loading, setLoading] = useState(false);
-    const [selectedFile, setSelectedFile] = useState<string>();
 
     const handleCreatePost = async () => {
         setLoading(true);
@@ -108,7 +109,7 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
     const onTextChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        setError("")
+        setError("");
         const {
             target: { name, value },
         } = event;
@@ -117,20 +118,6 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
             ...prev,
             [name]: value,
         }));
-    };
-
-    const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const reader = new FileReader();
-
-        if (event.target.files?.[0]) {
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
-        reader.onload = (readerEvent) => {
-            if (readerEvent.target?.result) {
-                setSelectedFile(readerEvent.target?.result as string);
-            }
-        };
     };
     return (
         <>
@@ -157,7 +144,7 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
                     {selectedTab === "Images & Video" && (
                         <ImageUpload
                             selectedFile={selectedFile}
-                            onSelectImage={onSelectImage}
+                            onSelectImage={onSelectFile}
                             setSelectedTab={setSelectedTab}
                             setSelectedFile={setSelectedFile}
                         />

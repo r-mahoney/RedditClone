@@ -9,16 +9,28 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ communityData }) => {
-    const { communityStateValue, onJoinOrLeaveCommunity, loading } = useCommunityData();
-    let isJoined = !!communityStateValue.mySnippets.find(item => item.communityId === communityData.id);
+    const { communityStateValue, onJoinOrLeaveCommunity, loading } =
+        useCommunityData();
+    let isJoined = !!communityStateValue.mySnippets.find(
+        (item) => item.communityId === communityData.id
+    );
 
     return (
         <Flex direction="column" width="100%" height="146px">
             <Box height="50%" bg="blue.500" />
             <Flex justify="center" bg="white" flexGrow={1}>
                 <Flex width="95%" maxWidth="860px">
-                    {communityData.imageURL ? (
-                        <Image />
+                    {communityStateValue.currentCommunity?.imageURL ? (
+                        <Image
+                            src={communityStateValue.currentCommunity?.imageURL}
+                            boxSize="64px"
+                            position="relative"
+                            top={-3}
+                            color="blue.500"
+                            border="4px solid white"
+                            borderRadius="full"
+                            bg="white"
+                        />
                     ) : (
                         <Icon
                             as={FaReddit}
@@ -50,7 +62,9 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
                             pr={6}
                             pl={6}
                             isLoading={loading}
-                            onClick={() => onJoinOrLeaveCommunity(communityData, isJoined)}
+                            onClick={() =>
+                                onJoinOrLeaveCommunity(communityData, isJoined)
+                            }
                         >
                             {isJoined ? "Joined" : "Join"}
                         </Button>

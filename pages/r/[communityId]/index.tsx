@@ -1,28 +1,46 @@
-import { Community } from "@/src/atoms/communitiesAtom";
+import { Community, communityState } from "@/src/atoms/communitiesAtom";
 import CreatePostLink from "@/src/components/Community/CreatePostLink";
 import Header from "@/src/components/Community/Header";
 import CommunityNotFound from "@/src/components/Community/NotFound";
 import PageContent from "@/src/components/Layout/PageContent";
+import Posts from "@/src/components/Posts/Posts";
 import { firestore } from "@/src/firebase/clientApp";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import safeJsonStringify from "safe-json-stringify";
+import { useSetRecoilState } from "recoil";
+import About from "@/src/components/Community/About";
 
 type CommunityPageProps = {
     communityData: Community;
 };
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
+    const setCommunityStateValue = useSetRecoilState(communityState);
+
     if (!communityData) {
         return <CommunityNotFound />;
     }
+
+    useEffect(() => {
+        setCommunityStateValue(prev => ({
+            ...prev,
+            currentCommunity: communityData
+        }))
+    }, []);
+
     return (
         <>
             <Header communityData={communityData} />
             <PageContent>
-                <><CreatePostLink /></>
-                <><div>Right hand side</div></>
+                <>
+                    <CreatePostLink />
+                    <Posts communityData={communityData} />
+                </>
+                <>
+                    <About communityData={communityData}/>
+                </>
             </PageContent>
         </>
     );

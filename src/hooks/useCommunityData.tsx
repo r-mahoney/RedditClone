@@ -103,8 +103,8 @@ const useCommunityData = () => {
     useEffect(() => {
         if(!user) return;
         getMySnippets()
-    }, [user])
-
+    }, [user]);
+    
     return {
         //data and functions to be accessed by other components
         communityStateValue,

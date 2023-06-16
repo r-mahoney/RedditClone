@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Post, postState, postVote } from "../atoms/postAtom";
 import { deleteObject, ref } from "firebase/storage";
 import { auth, firestore, storage } from "../firebase/clientApp";
@@ -14,11 +14,13 @@ import {
 } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { communityState } from "../atoms/communitiesAtom";
+import { authModalState } from "../atoms/authModalAtom";
 
 const usePost = () => {
     const [postStateValue, setPostStateValue] = useRecoilState(postState);
     const [user] = useAuthState(auth);
     const communityStateValue = useRecoilValue(communityState);
+    const setAuthModalState = useSetRecoilState(authModalState);
 
     const onVote = async (post: Post, vote: number, communityId: string) => {
         if (!user?.uid) {
@@ -170,6 +172,15 @@ const usePost = () => {
         getCommunityPostVotes(communityStateValue.currentCommunity.id);
     }, [user, communityStateValue.currentCommunity]);
 
+    useEffect(() => {
+        if(!user) {
+            setPostStateValue(prev => ({
+                ...prev,
+                postVotes: []
+            }))
+        }
+    }, [user]);
+    
     return {
         postStateValue,
         setPostStateValue,

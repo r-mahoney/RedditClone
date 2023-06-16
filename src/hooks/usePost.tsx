@@ -21,10 +21,20 @@ const usePost = () => {
     const communityStateValue = useRecoilValue(communityState);
 
     const onVote = async (post: Post, vote: number, communityId: string) => {
+        if (!user?.uid) {
+            setAuthModalState({ open: true, view: "login" });
+            return;
+        }
+
         const { voteStatus } = post;
+        // const existingVote = post.currentUserVoteStatus;
         const existingVote = postStateValue.postVotes.find(
             (vote) => vote.postId === post.id
         );
+
+        // is this an upvote or a downvote?
+        // has this user voted on this post already? was it up or down?
+
         try {
             let voteChange = vote;
             const batch = writeBatch(firestore);
@@ -57,18 +67,17 @@ const usePost = () => {
                 const postVoteRef = doc(
                     firestore,
                     "users",
-                    `${user?.uid}/postVotes/${existingVote.id}`
+                    `${user.uid}/postVotes/${existingVote.id}`
                 );
                 //removing vote: upvote to neutral
                 //or downvote to neutral
                 if (existingVote.voteValue === vote) {
-                    //add/subtract 1 to post.voteStatus
                     voteChange *= -1;
                     updatedPost.voteStatus = voteStatus - vote;
                     updatedPostVotes = updatedPostVotes.filter(
                         (vote) => vote.id !== existingVote.id
                     );
-                    //delete postVote document
+                    batch.delete(postVoteRef);
                 }
                 //upvote to downvote or vice versa
                 else {
@@ -157,7 +166,7 @@ const usePost = () => {
     };
     useEffect(() => {
         if (!user?.uid || !communityStateValue.currentCommunity) return;
-        console.log(communityStateValue.currentCommunity.id)
+        console.log(communityStateValue.currentCommunity.id);
         getCommunityPostVotes(communityStateValue.currentCommunity.id);
     }, [user, communityStateValue.currentCommunity]);
 
@@ -170,3 +179,6 @@ const usePost = () => {
     };
 };
 export default usePost;
+function setAuthModalState(arg0: { open: boolean; view: string }) {
+    throw new Error("Function not implemented.");
+}

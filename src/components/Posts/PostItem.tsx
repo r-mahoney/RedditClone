@@ -1,21 +1,22 @@
 import { Post } from "@/src/atoms/postAtom";
 import {
-    Flex,
-    Text,
-    Icon,
-    Image,
-    Stack,
-    Skeleton,
-    Spinner,
     Alert,
     AlertIcon,
     AlertTitle,
+    Flex,
+    Icon,
+    Image,
+    Link,
+    Skeleton,
+    Spinner,
+    Stack,
+    Text,
 } from "@chakra-ui/react";
 import moment from "moment";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+import { BsChat } from "react-icons/bs";
 import {
     IoArrowDownCircleOutline,
     IoArrowDownCircleSharp,
@@ -29,9 +30,14 @@ type PostItemProps = {
     post: Post;
     userIsCreator: boolean;
     userVoteValue?: number;
-    onVote: (post: Post, vote: number, communityId: string) => void;
+    onVote: (
+        event: React.MouseEvent<SVGElement, MouseEvent>,
+        post: Post,
+        vote: number,
+        communityId: string
+    ) => void;
     onDeletePost: (post: Post) => Promise<boolean>;
-    onSelectPost: () => void;
+    onSelectPost?: (post: Post) => void;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
@@ -45,7 +51,13 @@ const PostItem: React.FC<PostItemProps> = ({
     const [loadingImage, setLoadingImage] = useState(true);
     const [loadingDelete, setLoadingDelete] = useState(false);
     const [error, setError] = useState("");
-    const handleDelete = async () => {
+    const singlePostPage = !onSelectPost;
+    const router = useRouter();
+    const { communityId } = router.query;
+    const handleDelete = async (
+        event: React.MouseEvent<HTMLDivElement, MouseEvent>
+    ) => {
+        event.stopPropagation();
         setLoadingDelete(true);
         try {
             const success = await onDeletePost(post);
@@ -54,6 +66,9 @@ const PostItem: React.FC<PostItemProps> = ({
                 throw new Error("Failed to delete the post");
             }
             console.log("Post successfully deleted");
+            if (singlePostPage) {
+                router.push(`/r/${post.communityId}`);
+            }
         } catch (error: any) {
             console.log("handleDelete error", error.message);
             setError(error.message);
@@ -64,21 +79,21 @@ const PostItem: React.FC<PostItemProps> = ({
         <Flex
             border="1px solid"
             bg="white"
-            borderRadius={4}
-            borderColor="gray.300"
+            borderRadius={singlePostPage ? "4px 4px 0 0 " : 4}
+            borderColor={singlePostPage ? "white" : "gray.300"}
             _hover={{
-                borderColor: "gray.500",
+                borderColor: singlePostPage ? "none" : "gray.500",
             }}
-            // cursor="pointer"
-            onClick={onSelectPost}
+            cursor={singlePostPage ? "unset" : "pointer"}
+            onClick={() => onSelectPost && onSelectPost(post)}
         >
             <Flex
                 direction="column"
                 align="center"
-                bg="gray.100"
+                bg={singlePostPage ? "none" : "gray.100"}
                 p={2}
                 width="40px"
-                borderRadius={4}
+                borderRadius={singlePostPage ? 0 : "3px 0 0 3px"}
             >
                 <Icon
                     as={
@@ -88,7 +103,9 @@ const PostItem: React.FC<PostItemProps> = ({
                     }
                     color={userVoteValue === 1 ? "brand.100" : "gray.400"}
                     fontSize={22}
-                    onClick={() => onVote(post, 1, post.communityId)}
+                    onClick={(event) =>
+                        onVote(event, post, 1, post.communityId)
+                    }
                     cursor="pointer"
                 />
                 <Text>{post.voteStatus}</Text>
@@ -100,12 +117,14 @@ const PostItem: React.FC<PostItemProps> = ({
                     }
                     color={userVoteValue === -1 ? "blue.500" : "gray.400"}
                     fontSize={22}
-                    onClick={() => onVote(post, -1, post.communityId)}
+                    onClick={(event) =>
+                        onVote(event, post, -1, post.communityId)
+                    }
                     cursor="pointer"
                 />
             </Flex>
             <Flex direction="column" width="100%">
-            {error && (
+                {error && (
                     <Alert status="error">
                         <AlertIcon />
                         <AlertTitle>{error}</AlertTitle>
@@ -119,12 +138,30 @@ const PostItem: React.FC<PostItemProps> = ({
                         fontSize="9pt"
                     >
                         {/* home page check */}
-                        <Text>
-                            Posted by u/{post.userDisplayText}{" "}
-                            {moment(
-                                new Date(post.createdAt.seconds * 1000)
-                            ).fromNow()}
-                        </Text>
+                        {singlePostPage ? (
+                            <Flex direction="column">
+                                <Text fontWeight={600}>
+                                    <Link href={`/r/${communityId}`}>
+                                        {communityId}
+                                    </Link>{" "}
+                                    <span style={{ fontWeight: "200" }}>
+                                        {moment(
+                                            new Date(
+                                                post.createdAt.seconds * 1000
+                                            )
+                                        ).fromNow()}
+                                    </span>
+                                </Text>
+                                <Text>by u/{post.userDisplayText}</Text>
+                            </Flex>
+                        ) : (
+                            <Text>
+                                Posted by u/{post.userDisplayText}{" "}
+                                {moment(
+                                    new Date(post.createdAt.seconds * 1000)
+                                ).fromNow()}
+                            </Text>
+                        )}
                     </Stack>
                     <Text fontSize="12pt" fontWeight={600}>
                         {post.title}

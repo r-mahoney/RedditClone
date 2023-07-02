@@ -29,6 +29,7 @@ import useSelectFile from "@/src/hooks/useSelectFile";
 
 type NewPostProps = {
     user: User;
+    communityImageURL?: string;
 };
 
 const formTabs: tabItem[] = [
@@ -59,7 +60,7 @@ export type tabItem = {
     icon: typeof Icon.arguments;
 };
 
-const NewPost: React.FC<NewPostProps> = ({ user }) => {
+const NewPost: React.FC<NewPostProps> = ({ user, communityImageURL }) => {
     const { selectedFile, setSelectedFile, onSelectFile } = useSelectFile();
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState(formTabs[0].title);
@@ -77,6 +78,7 @@ const NewPost: React.FC<NewPostProps> = ({ user }) => {
         try {
             const postDocRef = await addDoc(collection(firestore, "posts"), {
                 communityId: communityId as string,
+                communityImageURL: communityImageURL || "",
                 creatorId: user.uid,
                 userDisplayText: user.email!.split("@")[0],
                 title,

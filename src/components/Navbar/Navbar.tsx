@@ -11,7 +11,7 @@ import { defaultMenuItem } from "@/src/atoms/directoryMenuAtom";
 
 const Navbar: React.FC = () => {
     const [user, loading, error] = useAuthState(auth);
-    const { onSelectMenuItem } = useDirectory();
+    const { onSelectMenuItem, directoryState } = useDirectory();
     return (
         <Flex
             bg="white"

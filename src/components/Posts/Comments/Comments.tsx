@@ -192,7 +192,7 @@ const Comments: React.FC<CommentsProps> = ({
                                         comment={item}
                                         onDeleteComment={onDeleteComment}
                                         loadingDelete={loadingDeleteId===item.id}
-                                        userId={user.uid}
+                                        userId={user?.uid}
                                     />
                                 ))}
                             </>

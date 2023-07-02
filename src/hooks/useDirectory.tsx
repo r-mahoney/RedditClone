@@ -25,7 +25,8 @@ const useDirectory = () => {
             ...prev,
             selectedMenuItem: menuItem,
         }));
-        router.push(menuItem.link);
+
+        router?.push(menuItem.link);
         if (directoryState.isOpen) {
             toggleMenuOpen();
         }
@@ -33,8 +34,9 @@ const useDirectory = () => {
 
     useEffect(() => {
         const { currentCommunity } = communityStateValue;
+        const {community} = router.query
 
-        if (currentCommunity) {
+        if (currentCommunity && community) {
             setDirectoryState((prev) => ({
                 ...prev,
                 selectedMenuItem: {

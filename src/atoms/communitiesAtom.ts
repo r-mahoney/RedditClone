@@ -1,11 +1,11 @@
-import { Timestamp } from '@google-cloud/firestore';
-import { atom } from 'recoil';
+import { Timestamp } from "@google-cloud/firestore";
+import { atom } from "recoil";
 
 export interface Community {
     id: string;
     creatorId: string;
     numberOfMembers: number;
-    privacyType: 'public' | 'restricted' | 'private';
+    privacyType: "public" | "restricted" | "private";
     createdAt?: Timestamp;
     imageURL?: string;
 }
@@ -13,19 +13,21 @@ export interface Community {
 export interface CommunitySnippet {
     communityId: string;
     isModerator?: boolean;
-    imageURL?: string
+    imageURL?: string;
 }
 
 interface CommunityState {
     mySnippets: CommunitySnippet[];
     currentCommunity?: Community;
+    snippetsFetched: boolean;
     // visitedCommunities : communitySnippet[]
 }
 
 const defaultCommunityState: CommunityState = {
     mySnippets: [],
-}
+    snippetsFetched: false,
+};
 export const communityState = atom<CommunityState>({
-    key: 'communityState',
-    default: defaultCommunityState
-})
+    key: "communityState",
+    default: defaultCommunityState,
+});

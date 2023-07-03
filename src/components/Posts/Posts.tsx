@@ -2,11 +2,11 @@ import { Community } from "@/src/atoms/communitiesAtom";
 import { Post } from "@/src/atoms/postAtom";
 import { auth, firestore } from "@/src/firebase/clientApp";
 import usePost from "@/src/hooks/usePost";
+import { Stack } from "@chakra-ui/react";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import PostItem from "./PostItem";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Stack } from "@chakra-ui/react";
+import PostItem from "./PostItem";
 import PostLoader from "./PostLoader";
 
 type PostsProps = {
@@ -14,9 +14,7 @@ type PostsProps = {
 };
 
 const Posts: React.FC<PostsProps> = ({ communityData }) => {
-    const [user] = useAuthState(auth);
-
-    const [loading, setLoading] = useState(false);
+    const [user] = useAuthState(auth);const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
     const {
         postStateValue,

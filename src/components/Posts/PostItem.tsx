@@ -193,7 +193,7 @@ const PostItem: React.FC<PostItemProps> = ({
                                 Posted by u/{post.userDisplayText}{" "}
                                 {moment(
                                     new Date(post.createdAt.seconds * 1000)
-                                ).fromNow()}
+                                    ).fromNow()}
                             </Text>
                         )}
                     </Stack>
@@ -257,7 +257,7 @@ const PostItem: React.FC<PostItemProps> = ({
                         <Icon as={IoBookmarkOutline} mr={2} />
                         <Text fontSize="9pt">Save</Text>
                     </Flex>
-                    {userIsCreator && (
+                    {(userIsCreator) && (
                         <Flex
                             align="center"
                             p="8px 10px"

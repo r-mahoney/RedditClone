@@ -47,8 +47,8 @@ const PostPage: React.FC = () => {
                         onDeletePost={onDeletePost}
                         userVoteValue={
                             postStateValue.postVotes.find(
-                                (itme) =>
-                                    itme.postId ===
+                                (item) =>
+                                    item.postId ===
                                     postStateValue.selectedPost?.id
                             )?.voteValue
                         }

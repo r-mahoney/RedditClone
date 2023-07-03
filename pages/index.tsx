@@ -1,6 +1,8 @@
 import { communityState } from "@/src/atoms/communitiesAtom";
 import { Post, postVote } from "@/src/atoms/postAtom";
 import CreatePostLink from "@/src/components/Community/CreatePostLink";
+import PersonalHome from "@/src/components/Community/PersonalHome";
+import Recommendations from "@/src/components/Community/Recommendations";
 import PageContent from "@/src/components/Layout/PageContent";
 import PostItem from "@/src/components/Posts/PostItem";
 import PostLoader from "@/src/components/Posts/PostLoader";
@@ -157,7 +159,10 @@ export default function Home() {
                 )}
             </>
 
-            <>{/* <Recommendations /> */}</>
+            <Stack spacing={5}>
+                <Recommendations />
+                <PersonalHome />
+            </Stack>
         </PageContent>
     );
 }

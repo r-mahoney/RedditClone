@@ -134,7 +134,7 @@ export default function Home() {
     return (
         <PageContent>
             <>
-                <CreatePostLink />
+                {/* <CreatePostLink /> */}
                 {loading ? (
                     <PostLoader />
                 ) : (

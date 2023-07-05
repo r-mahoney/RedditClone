@@ -41,18 +41,18 @@ export default function Home() {
                 //get posts from users communities
                 const myCommunityIds = communityStateValue.mySnippets.map(
                     (snippet) => snippet.communityId
-                );
-
-                const postQuery = query(
-                    collection(firestore, "posts"),
+                    );
+                    
+                    const postQuery = query(
+                        collection(firestore, "posts"),
                     where("communityId", "in", myCommunityIds),
                     limit(10)
-                );
-                const postDocs = await getDocs(postQuery);
-                const posts = postDocs.docs.map((doc) => ({
-                    id: doc.id,
-                    ...doc.data(),
-                }));
+                    );
+                    const postDocs = await getDocs(postQuery);
+                    const posts = postDocs.docs.map((doc) => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
                 setPostStateValue((prev) => ({
                     ...prev,
                     posts: posts as Post[],
@@ -65,7 +65,7 @@ export default function Home() {
         }
         setLoading(false);
     };
-
+    
     const buildNoUserHomeFeed = async () => {
         setLoading(true);
         try {
@@ -73,10 +73,10 @@ export default function Home() {
                 collection(firestore, "posts"),
                 orderBy("voteStatus", "desc"),
                 limit(10)
-            );
-            const postDocs = await getDocs(postQuery);
-            const posts = postDocs.docs.map((doc) => ({
-                id: doc.id,
+                );
+                const postDocs = await getDocs(postQuery);
+                const posts = postDocs.docs.map((doc) => ({
+                    id: doc.id,
                 ...doc.data(),
             }));
             setPostStateValue((prev) => ({
@@ -88,7 +88,7 @@ export default function Home() {
         }
         setLoading(false);
     };
-
+    
     const getUserPostVotes = async () => {
         try {
             const postIds = postStateValue.posts.map((post) => post.id);
@@ -109,7 +109,7 @@ export default function Home() {
             console.log("getUserPostVotes error", error.message);
         }
     };
-
+    
     useEffect(() => {
         //want to know if user is logged in
         //or service is attempting to get authed user
